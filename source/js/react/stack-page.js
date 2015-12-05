@@ -19,12 +19,12 @@ var PageHeader = React.createClass({
 // TODO: get rid of copy-paste. Make generic button for Push, Pop and RunDemo buttons.
 var PushButton = React.createClass({
   handleClick: function(event) {
-    stack.push(10);
+    stack.push(stack.randInt());
   },
 
   render: function() {
     return (
-      <button className='btn btn-block' onClick={this.handleClick}>Push</button>
+      <button className='btn btn-block' onClick={this.handleClick}>Push random</button>
     )
   }
 });
@@ -41,18 +41,6 @@ var PopButton = React.createClass({
   }
 });
 
-var DemoButton = React.createClass({
-  handleClick: function(event) {
-    stack.runDemo();
-  },
-
-  render: function() {
-    return (
-      <button className='btn btn-block' onClick={this.handleClick}>Run Demo</button>
-    )
-  }
-});
-
 module.exports = function() {
 
   ReactDOM.render(
@@ -65,7 +53,6 @@ module.exports = function() {
       <div className='col-md-2'>
         <PushButton/>
         <PopButton/>
-        <DemoButton/>
       </div>
       <div id='stackContainer' className='col-md-10 vis-container'></div>
     </div>,

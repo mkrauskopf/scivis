@@ -23,14 +23,8 @@ function createEmptyStack(svgContainer) {
   var toAddQueue = [];
   var gStack = [];
 
-  var runDemo = function (item) {
-    toAddQueue.push(10);
-    toAddQueue.push(2);
-    toAddQueue.push(10);
-    toAddQueue.push(5);
-    toAddQueue.push(4);
-    toAddQueue.push(100);
-    refreshUI();
+  function randInt() {
+    return Math.floor(Math.random() * 100);
   }
 
   var push = function (item) {
@@ -55,7 +49,7 @@ function createEmptyStack(svgContainer) {
   return {
     'push': push,
     'pop': pop,
-    'runDemo': runDemo
+    'randInt': randInt
   }
 
   function refreshUI() {
