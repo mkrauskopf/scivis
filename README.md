@@ -1,4 +1,4 @@
-So far rather playground for myself where I started to learning frontend
+So far rather playground for myself where I'm occasionally learning frontend
 visualization (SVG, D3.js), React.js and allied technologies (Browserify, Gulp,
 Node.js, Sass).
 
