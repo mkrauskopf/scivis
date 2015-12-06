@@ -16,6 +16,8 @@ var stackX = 80,
     stackY = 60,
     stackHeight;
 
+var stackInner;
+
 function createEmptyStack(svgContainer) {
 
   // contains SVG items representations
@@ -31,6 +33,8 @@ function createEmptyStack(svgContainer) {
     var transX = stackX + itemDim.padding;
     gStack.pop().transition().duration(500).attr('transform', 'translate(' + transX + ', ' + itemDim.startY + ')')
                 .transition().duration(500).attr('transform', 'translate(' + (2 * transX) + ', 0)').style('opacity', 0);
+
+    drawFullStatus(isFull());
   }
 
   var push = function(itemText) {
@@ -39,17 +43,28 @@ function createEmptyStack(svgContainer) {
     }
     var gItem = drawItem(itemText);
     gStack.push(gItem);
+    var full = isFull();
 
     // animate push action
     var transY = (getStackBottom() - ((gStack.length) * (itemDim.height + itemDim.padding)));
     var transX = stackX + itemDim.padding;
     gItem.transition().duration(500).attr('transform', 'translate(' + transX + ', 0)')
-         .transition().attr('transform', 'translate(' + transX + ', ' + transY + ')');
+         .transition().attr('transform', 'translate(' + transX + ', ' + transY + ')')
+         .each('end', function() { drawFullStatus(full) });
   }
-  
+
+  function isFull() {
+    return gStack.length === maxNumberOfItems;
+  }
+
+  function drawFullStatus(isFull) {
+    stackInner.transition().duration(100).style('opacity', isFull ? 100 : 0);
+  }
+
   function drawItem(itemText) {
     var gItem = svgContainer.append('g');
-    appendRectangle(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue');
+    appendRectangle(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
+                   .attr('fill', 'none');
     appendText(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemText);
     return gItem;
   }
@@ -86,8 +101,7 @@ function appendRectangle(svgContainer, x, y, w, h, color) {
       .attr('height', h)
       .attr('width', w)
       .attr('stroke-width', 2)
-      .attr('stroke', color ? color : 'black')
-      .attr('fill', 'white');
+      .attr('stroke', color ? color : 'black');
 }
 
 function createScene(containerSelector) {
@@ -110,13 +124,18 @@ function drawStackBody(canvas) {
 
   var line = d3.svg.line().x(function(d){return d.x;})
                             .y(function(d){return d.y;})
-                            .interpolate('linear'); 
+                            .interpolate('linear');
 
   canvas.append('svg:path')
       .attr('d', line(pathInfo))
       .style('stroke-width', 2)
       .style('stroke', 'black')
       .style('fill', 'none');
+
+  // fill of the stack which become visible when stack is full
+  stackInner = appendRectangle(canvas, stackX, stackY, stackWidth, stackHeight, "none")
+                              .attr('fill', '#fcc')
+                              .attr('opacity', '0');
 
 }
 
