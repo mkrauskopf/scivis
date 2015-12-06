@@ -97,14 +97,33 @@ function appendRectangle(svgContainer, x, y, w, h, color) {
 }
 
 function createScene(containerSelector) {
-  // stack body
-  var stackWidth = itemDim.width + (itemDim.padding * 2);
   stackHeight = maxNumberOfItems * (itemDim.height + (itemDim.padding)) + itemDim.padding;
-
   var svgContainer = d3.select(containerSelector).append('svg').attr('height', stackHeight + 100);
-  appendRectangle(svgContainer, stackX, stackY, stackWidth, stackHeight, 'green');
-
+  drawStackBody(svgContainer);
   return svgContainer;
+}
+
+function drawStackBody(canvas) {
+  var stackWidth = itemDim.width + (itemDim.padding * 2);
+
+  // Specify the path points
+  var pathInfo = [{x:stackX, y:stackY},
+                  {x:stackX, y:stackY + stackHeight},
+                  {x:stackX, y:stackY + stackHeight},
+                  {x:stackX + stackWidth, y:stackY + stackHeight},
+                  {x:stackX + stackWidth, y:stackY}
+                 ]
+
+  var line = d3.svg.line().x(function(d){return d.x;})
+                            .y(function(d){return d.y;})
+                            .interpolate("linear"); 
+
+  canvas.append("svg:path")
+      .attr("d", line(pathInfo))
+      .style("stroke-width", 2)
+      .style("stroke", "black")
+      .style("fill", "none");
+
 }
 
 module.exports = {
