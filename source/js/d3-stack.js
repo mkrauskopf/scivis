@@ -84,10 +84,6 @@ function appendText(svgContainer, x, y, w, text) {
     .text(text);
 }
 
-function appendSquare(svgContainer, x, y, w, color) {
-  return appendRectangle(svgContainer, x, y, w, w, color);
-}
-
 function appendRectangle(svgContainer, x, y, w, h, color) {
   return svgContainer
     .append('rect')
