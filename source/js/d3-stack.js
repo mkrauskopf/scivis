@@ -58,7 +58,7 @@ function createEmptyStack(svgContainer) {
   }
 
   function drawFullStatus(isFull) {
-    stackInner.transition().duration(100).style('opacity', isFull ? 100 : 0);
+    stackInner.transition().duration(700).style('opacity', isFull ? 100 : 0);
   }
 
   function drawItem(itemText) {
