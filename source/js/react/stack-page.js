@@ -49,12 +49,19 @@ module.exports = function() {
   );
 
   ReactDOM.render(
-    <div className='row'>
-      <div className='col-md-2'>
-        <PushButton/>
-        <PopButton/>
+    <div>
+      <p>
+        Visualization of <em>stack</em> data structure abstraction (fixed-size for now).
+        Use <em>push</em> and <em>pop</em> buttons to manage stack items.<br/>
+        Stack checks and indicates when it it becomes full.
+      </p>
+      <div className='row'>
+        <div className='col-md-2'>
+          <PushButton/>
+          <PopButton/>
+        </div>
+        <div id='stackContainer' className='col-md-10 vis-container'></div>
       </div>
-      <div id='stackContainer' className='col-md-10 vis-container'></div>
     </div>,
     document.getElementById('container')
   );
