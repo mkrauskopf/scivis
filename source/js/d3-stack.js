@@ -18,32 +18,48 @@ var stackX = 80,
 
 function createEmptyStack(svgContainer) {
 
-  var operations = [];
-
-  var toAddQueue = [];
+  // contains SVG items representations
   var gStack = [];
+
+  var pop = function() {
+    if (gStack.length == 0) {
+      return;
+    }
+
+    // animate pop action
+    var transY = (getStackBottom() - (gStack.length * (itemDim.height + itemDim.padding)));
+    var transX = stackX + itemDim.padding;
+    gStack.pop().transition().duration(500).attr('transform', 'translate(' + transX + ', ' + itemDim.startY + ')')
+                .transition().duration(500).attr('transform', 'translate(' + (2 * transX) + ', 0)').style('opacity', 0);
+  }
+
+  var push = function(itemText) {
+    if (gStack.length >= maxNumberOfItems) {
+      return;
+    }
+    var gItem = drawItem(itemText);
+    gStack.push(gItem);
+
+    // animate push action
+    var transY = (getStackBottom() - ((gStack.length) * (itemDim.height + itemDim.padding)));
+    var transX = stackX + itemDim.padding;
+    gItem.transition().duration(500).attr('transform', 'translate(' + transX + ', 0)')
+         .transition().attr('transform', 'translate(' + transX + ', ' + transY + ')');
+  }
+  
+  function drawItem(itemText) {
+    var gItem = svgContainer.append('g');
+    appendRectangle(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue');
+    appendText(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemText);
+    return gItem;
+  }
 
   function randInt() {
     return Math.floor(Math.random() * 100);
   }
 
-  var push = function (item) {
-    toAddQueue.push(item);
-    refreshUI();
-  }
-
-  var pop = function () {
-    var gItem = gStack.pop();
-    if (!gItem) {
-      return;
-    }
-
-    var stackBottom = stackY + stackHeight;
-    var transY = (stackBottom - (gStack.length * (itemDim.height + itemDim.padding)));
-    var transX = stackX + itemDim.padding;
-    gItem.transition().duration(500).attr('transform', 'translate(' + transX + ', ' + itemDim.startY + ')')
-         .transition().duration(500).attr('transform', 'translate(' + (2 * transX) + ', 0)').style('opacity', 0)
-         .each('end', function() {refreshUI()});
+  function getStackBottom() {
+    return stackY + stackHeight;
   }
 
   return {
@@ -52,28 +68,6 @@ function createEmptyStack(svgContainer) {
     'randInt': randInt
   }
 
-  function refreshUI() {
-    if (gStack.length >= maxNumberOfItems) {
-      console.log('stack is full');
-      return;
-    }
-    var item = toAddQueue.shift()
-    if (!item) {
-      return;
-    }
-
-    var gItem = svgContainer.append('g');
-    appendRectangle(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue');
-    appendText(gItem, itemDim.startX, itemDim.startY, itemDim.width, item);
-    gStack.push(gItem);
-
-    var stackBottom = stackY + stackHeight;
-    var transY = (stackBottom - ((gStack.length) * (itemDim.height + itemDim.padding)));
-    var transX = stackX + itemDim.padding;
-    gItem.transition().duration(500).attr('transform', 'translate(' + transX + ', 0)')
-         .transition().attr('transform', 'translate(' + transX + ', ' + transY + ')')
-         .each('end', function() {refreshUI()});
-  }
 }
 
 function appendText(svgContainer, x, y, w, text) {
