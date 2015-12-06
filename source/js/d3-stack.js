@@ -54,7 +54,7 @@ function createEmptyStack(svgContainer) {
 
   function refreshUI() {
     if (gStack.length >= maxNumberOfItems) {
-      console.log("stack is full");
+      console.log('stack is full');
       return;
     }
     var item = toAddQueue.shift()
@@ -116,13 +116,13 @@ function drawStackBody(canvas) {
 
   var line = d3.svg.line().x(function(d){return d.x;})
                             .y(function(d){return d.y;})
-                            .interpolate("linear"); 
+                            .interpolate('linear'); 
 
-  canvas.append("svg:path")
-      .attr("d", line(pathInfo))
-      .style("stroke-width", 2)
-      .style("stroke", "black")
-      .style("fill", "none");
+  canvas.append('svg:path')
+      .attr('d', line(pathInfo))
+      .style('stroke-width', 2)
+      .style('stroke', 'black')
+      .style('fill', 'none');
 
 }
 
