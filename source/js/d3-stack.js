@@ -98,6 +98,10 @@ function createEmptyStack(svgContainer) {
     return stack.length === maxNumberOfItems;
   }
 
+  function isEmpty() {
+    return stack.length === 0;
+  }
+
   function drawFullStatus(isFull) {
     stackInner.transition().duration(700).style('opacity', isFull ? 100 : 0);
   }
@@ -113,6 +117,8 @@ function createEmptyStack(svgContainer) {
   return {
     'push': push,
     'pop': pop,
+    'isFull': isFull,
+    'isEmpty': isEmpty,
     'randInt': randInt
   }
 

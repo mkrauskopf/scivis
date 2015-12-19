@@ -19,15 +19,15 @@ var PageHeader = React.createClass({
 var StackButtons = React.createClass({
 
   getInitialState() {
-    return { disabled: '' };
+    return { pushDisabled: false, popDisabled: true };
   },
 
   enableUI: function() {
-    this.setState({ disabled: false });
+    this.setState({ pushDisabled: stack.isFull(), popDisabled: stack.isEmpty() });
   },
 
   disableUI: function() {
-    this.setState({ disabled: true });
+    this.setState({ pushDisabled: true, popDisabled: true });
   },
 
   handlePush: function(event) {
@@ -44,8 +44,8 @@ var StackButtons = React.createClass({
   render: function() {
     return (
       <div>
-        <button disabled={this.state.disabled} className='btn btn-block' onClick={this.handlePush}>Push random</button>
-        <button disabled={this.state.disabled} className='btn btn-block' onClick={this.handlePop}>Pop</button>
+        <button disabled={this.state.pushDisabled} className='btn btn-block' onClick={this.handlePush}>Push random</button>
+        <button disabled={this.state.popDisabled} className='btn btn-block' onClick={this.handlePop}>Pop</button>
       </div>
     )
   }
