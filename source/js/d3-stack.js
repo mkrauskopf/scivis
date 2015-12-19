@@ -4,8 +4,8 @@ var d3 = require('d3');
 var _ = require('underscore');
 
 var itemDim = {
-  'startX': 2,
-  'startY': 2,
+  'startX': 4,
+  'startY': 4,
   'width': 40,
   'height': 30,
   'padding': 4
@@ -13,9 +13,15 @@ var itemDim = {
 
 var maxNumberOfItems = 6;
 
-var stackX = 80,
-    stackY = 60,
-    stackHeight;
+var containerHeight,
+    containerWidth = 600;
+
+var stackDim = {
+    'x': 80,
+    'y': 60,
+    'height': undefined,
+    'width': undefined
+}
 
 var stackInner;
 
@@ -67,9 +73,9 @@ function createEmptyStack(svgContainer) {
 
     // animate push action on enter
     var computeY = function(i) {
-      return getStackBottom() - ((i + 1) * (itemDim.height + itemDim.padding));
+      return getStackBottom() - ((i + 1) * (itemDim.height + itemDim.padding)) - (itemDim.startY / 2);
     }
-    var targetItemX = stackX + (itemDim.padding / 2);
+    var targetItemX = stackDim.x + (itemDim.padding / 2) - (itemDim.startX / 2);
     var full = isFull();
     addedItems
       .transition().duration(animDuration).attr('transform',
@@ -111,7 +117,7 @@ function createEmptyStack(svgContainer) {
   }
 
   function getStackBottom() {
-    return stackY + stackHeight - 2;
+    return stackDim.y + stackDim.height - 2;
   }
 
   return {
@@ -136,35 +142,41 @@ function appendRectangle(svgContainer, x, y, w, h, color) {
 }
 
 function createScene(containerSelector) {
-  stackHeight = maxNumberOfItems * (itemDim.height + (itemDim.padding)) + itemDim.padding;
-  var svgContainer = d3.select(containerSelector).append('svg').attr('height', stackHeight + 100);
+  stackDim.height = maxNumberOfItems * (itemDim.height + (itemDim.padding)) + itemDim.padding;
+  containerHeight = stackDim.height + 100;
+  var svgContainer = d3.select(containerSelector).append('svg')
+                                                 .attr('height', containerHeight)
+                                                 .attr('width', containerWidth);
+  // svg border
+  appendRectangle(svgContainer, 0, 0, containerWidth, containerHeight, "#ccc").style('fill', 'none');
+
   drawStackBody(svgContainer);
   return svgContainer;
 }
 
-function drawStackBody(canvas) {
-  var stackWidth = itemDim.width + (itemDim.padding * 2);
+function drawStackBody(svgContainer) {
+  stackDim.width = itemDim.width + (itemDim.padding * 2);
 
   // Specify the path points
-  var pathInfo = [{x:stackX, y:stackY},
-                  {x:stackX, y:stackY + stackHeight},
-                  {x:stackX, y:stackY + stackHeight},
-                  {x:stackX + stackWidth, y:stackY + stackHeight},
-                  {x:stackX + stackWidth, y:stackY}
+  var pathInfo = [{x:stackDim.x, y:stackDim.y},
+                  {x:stackDim.x, y:stackDim.y + stackDim.height},
+                  {x:stackDim.x, y:stackDim.y + stackDim.height},
+                  {x:stackDim.x + stackDim.width, y:stackDim.y + stackDim.height},
+                  {x:stackDim.x + stackDim.width, y:stackDim.y}
                  ]
 
   var line = d3.svg.line().x(function(d){return d.x;})
-                            .y(function(d){return d.y;})
-                            .interpolate('linear');
+                          .y(function(d){return d.y;})
+                          .interpolate('linear');
 
-  canvas.append('svg:path')
+  svgContainer.append('svg:path')
       .attr('d', line(pathInfo))
       .style('stroke-width', 2)
       .style('stroke', 'black')
       .style('fill', 'none');
 
   // fill of the stack which become visible when stack is full
-  stackInner = appendRectangle(canvas, stackX, stackY, stackWidth, stackHeight, "none")
+  stackInner = appendRectangle(svgContainer, stackDim.x, stackDim.y, stackDim.width, stackDim.height, "none")
                               .attr('fill', '#fcc')
                               .attr('opacity', '0');
 
