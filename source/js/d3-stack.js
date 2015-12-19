@@ -151,6 +151,17 @@ function createScene(containerSelector) {
   appendRectangle(svgContainer, 0, 0, containerWidth, containerHeight, "#ccc").style('fill', 'none');
 
   drawStackBody(svgContainer);
+
+  // vertical separator
+  var sepX = (stackDim.x + (stackDim.width / 2)) * 2;
+  var line = svgContainer.append("line")
+                         .attr("x1", sepX)
+                         .attr("y1", 0)
+                         .attr("x2", sepX)
+                         .attr("y2", containerHeight)
+                         .attr("stroke-width", 1)
+                         .attr("stroke", "#ccc");
+
   return svgContainer;
 }
 
