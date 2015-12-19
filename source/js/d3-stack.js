@@ -33,9 +33,6 @@ function createEmptyStack(stackAbstrSvg) {
   // contains SVG items representations
   var stack = [];
 
-  // contains 'g' items currently being removed. Used to drive D3.js remove-item translation.
-  var beingRemoved = [];
-
   /**
    * Pops item from the stack.
    *
@@ -96,8 +93,6 @@ function createEmptyStack(stackAbstrSvg) {
     // exit
     var transY = (getStackBottom() - (stack.length * (itemDim.height + itemDim.padding)));
     gItems.exit()
-      .filter(function(i, d) { return !_.contains(beingRemoved, i); })
-      .each(function(i, d) { beingRemoved.push(i); })
       .transition().duration(animDuration).attr('transform',
         'translate(' + targetItemX + ', ' + itemDim.startY + ')')
       .transition().attr(
