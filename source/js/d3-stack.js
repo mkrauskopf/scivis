@@ -1,6 +1,7 @@
 'use strict';
 
 var d3 = require('d3');
+var d3Utils = require('./d3-utils');
 var _ = require('underscore');
 
 var itemDim = {
@@ -130,37 +131,21 @@ function createEmptyStack(svgContainer) {
 
 }
 
-function appendRectangle(svgContainer, x, y, w, h, color) {
-  return svgContainer
-    .append('rect')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('height', h)
-      .attr('width', w)
-      .attr('stroke-width', 2)
-      .attr('stroke', color ? color : 'black');
-}
-
 function createScene(containerSelector) {
   stackDim.height = maxNumberOfItems * (itemDim.height + (itemDim.padding)) + itemDim.padding;
   containerHeight = stackDim.height + 100;
-  var svgContainer = d3.select(containerSelector).append('svg')
+  var svgContainerMain = d3.select(containerSelector).append('svg')
                                                  .attr('height', containerHeight)
                                                  .attr('width', containerWidth);
+  var svgContainer = svgContainerMain.append('g');
   // svg border
-  appendRectangle(svgContainer, 0, 0, containerWidth, containerHeight, "#ccc").style('fill', 'none');
+  d3Utils.appendRectangle(svgContainer, 0, 0, containerWidth, containerHeight, "#ccc").style('fill', 'none');
 
   drawStackBody(svgContainer);
 
   // vertical separator
   var sepX = (stackDim.x + (stackDim.width / 2)) * 2;
-  var line = svgContainer.append("line")
-                         .attr("x1", sepX)
-                         .attr("y1", 0)
-                         .attr("x2", sepX)
-                         .attr("y2", containerHeight)
-                         .attr("stroke-width", 1)
-                         .attr("stroke", "#ccc");
+  d3Utils.appendLine(svgContainer, sepX, 0, sepX, containerHeight, 1, "#ccc");
 
   return svgContainer;
 }
@@ -187,9 +172,10 @@ function drawStackBody(svgContainer) {
       .style('fill', 'none');
 
   // fill of the stack which become visible when stack is full
-  stackInner = appendRectangle(svgContainer, stackDim.x, stackDim.y, stackDim.width, stackDim.height, "none")
-                              .attr('fill', '#fcc')
-                              .attr('opacity', '0');
+  stackInner = d3Utils
+    .appendRectangle(svgContainer, stackDim.x, stackDim.y, stackDim.width, stackDim.height, "none")
+      .attr('fill', '#fcc')
+      .attr('opacity', '0');
 
 }
 
