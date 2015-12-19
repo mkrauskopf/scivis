@@ -36,6 +36,11 @@ function createEmptyStack(stackAbstrSvg) {
   // contains 'g' items currently being removed. Used to drive D3.js remove-item translation.
   var beingRemoved = [];
 
+  /**
+   * Pops item from the stack.
+   *
+   * @param onFinish - callback which will be called on the end of the rendering phase
+   */
   var pop = function(onFinish) {
     if (stack.length == 0) {
       return;
@@ -44,6 +49,12 @@ function createEmptyStack(stackAbstrSvg) {
     render(onFinish);
   }
 
+  /**
+   * Push item to the stack.
+   *
+   * @param itemText - will be renderer as item's text
+   * @param onFinish - callback which will be called on the end of the rendering phase
+   */
   var push = function(itemText, onFinish) {
     if (stack.length >= maxNumberOfItems) {
       return;
@@ -53,6 +64,7 @@ function createEmptyStack(stackAbstrSvg) {
   }
 
   function render(onFinish) {
+  /** Renders and animates stack abstraction part. */
     // bind data
     var gItems = stackAbstrSvg.selectAll('g').data(stack);
 
