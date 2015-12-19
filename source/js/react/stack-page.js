@@ -16,29 +16,40 @@ var PageHeader = React.createClass({
   }
 });
 
-// TODO: get rid of copy-paste. Make generic button for Push, Pop and RunDemo buttons.
-var PushButton = React.createClass({
-  handleClick: function(event) {
-    stack.push(stack.randInt());
+var StackButtons = React.createClass({
+
+  getInitialState() {
+    return { disabled: '' };
   },
+
+  enableUI: function() {
+    this.setState({ disabled: false });
+  },
+
+  disableUI: function() {
+    this.setState({ disabled: true });
+  },
+
+  handlePush: function(event) {
+    this.disableUI();
+    stack.push(stack.randInt(), this.enableUI);
+  },
+
+  handlePop: function(event) {
+    this.disableUI();
+    stack.pop(this.enableUI);
+  },
+
 
   render: function() {
     return (
-      <button className='btn btn-block' onClick={this.handleClick}>Push random</button>
+      <div>
+        <button disabled={this.state.disabled} className='btn btn-block' onClick={this.handlePush}>Push random</button>
+        <button disabled={this.state.disabled} className='btn btn-block' onClick={this.handlePop}>Pop</button>
+      </div>
     )
   }
-});
 
-var PopButton = React.createClass({
-  handleClick: function(event) {
-    stack.pop();
-  },
-
-  render: function() {
-    return (
-      <button className='btn btn-block' onClick={this.handleClick}>Pop</button>
-    )
-  }
 });
 
 module.exports = function() {
@@ -57,8 +68,7 @@ module.exports = function() {
       </p>
       <div className='row'>
         <div className='col-md-2'>
-          <PushButton/>
-          <PopButton/>
+          <StackButtons/>
         </div>
         <div id='stackContainer' className='col-md-10 vis-container'></div>
       </div>

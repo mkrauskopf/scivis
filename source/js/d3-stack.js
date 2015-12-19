@@ -1,10 +1,11 @@
 'use strict';
 
 var d3 = require('d3');
+var _ = require('underscore');
 
 var itemDim = {
-  'startX': 0,
-  'startY': 0,
+  'startX': 2,
+  'startY': 2,
   'width': 40,
   'height': 30,
   'padding': 4
@@ -18,55 +19,87 @@ var stackX = 80,
 
 var stackInner;
 
+var animDuration = 300;
+
 function createEmptyStack(svgContainer) {
 
   // contains SVG items representations
-  var gStack = [];
+  var stack = [];
 
-  var pop = function() {
-    if (gStack.length == 0) {
+  // contains 'g' items currently being removed. Used to drive D3.js remove-item translation.
+  var beingRemoved = [];
+
+  var pop = function(onFinish) {
+    if (stack.length == 0) {
       return;
     }
-
-    // animate pop action
-    var transY = (getStackBottom() - (gStack.length * (itemDim.height + itemDim.padding)));
-    var transX = stackX + itemDim.padding;
-    gStack.pop().transition().duration(500).attr('transform', 'translate(' + transX + ', ' + itemDim.startY + ')')
-                .transition().duration(500).attr('transform', 'translate(' + (2 * transX) + ', 0)').style('opacity', 0);
-
-    drawFullStatus(isFull());
+    stack.pop();
+    render(onFinish);
   }
 
-  var push = function(itemText) {
-    if (gStack.length >= maxNumberOfItems) {
+  var push = function(itemText, onFinish) {
+    if (stack.length >= maxNumberOfItems) {
       return;
     }
-    var gItem = drawItem(itemText);
-    gStack.push(gItem);
-    var full = isFull();
+    stack.push(itemText);
+    render(onFinish);
+  }
 
-    // animate push action
-    var transY = (getStackBottom() - ((gStack.length) * (itemDim.height + itemDim.padding)));
-    var transX = stackX + itemDim.padding;
-    gItem.transition().duration(500).attr('transform', 'translate(' + transX + ', 0)')
-         .transition().attr('transform', 'translate(' + transX + ', ' + transY + ')')
-         .each('end', function() { drawFullStatus(full) });
+  function render(onFinish) {
+    // bind data
+    var gItems = svgContainer.selectAll('g').data(stack);
+
+    // enter
+    var addedItems = gItems.enter().append('g');
+    addedItems.append('text')
+        .attr('x', itemDim.startX + (itemDim.width / 2))
+        .attr('y', itemDim.startY + (itemDim.width / 2))
+        .attr('text-anchor', 'middle')
+        .text(function(d) { return d; });
+    addedItems.append('rect')
+        .attr('x', itemDim.startX)
+        .attr('y', itemDim.startY)
+        .attr('width', itemDim.width)
+        .attr('height', itemDim.height)
+        .attr('stroke-width', 2)
+        .attr('fill', 'none')
+        .attr('stroke', 'blue');
+
+    // animate push action on enter
+    var computeY = function(i) {
+      return getStackBottom() - ((i + 1) * (itemDim.height + itemDim.padding));
+    }
+    var targetItemX = stackX + (itemDim.padding / 2);
+    var full = isFull();
+    addedItems
+      .transition().duration(animDuration).attr('transform',
+          function(d,i) { return 'translate(' + targetItemX + ', 0)' })
+      .transition().attr('transform',
+          function(d,i) { return 'translate(' + targetItemX + ', ' + computeY(i) + ')' })
+      .each('end', function() { drawFullStatus(full); onFinish(); });
+
+    // no update section - items cannot be updated. Just added or removed.
+
+    // exit
+    var transY = (getStackBottom() - (stack.length * (itemDim.height + itemDim.padding)));
+    gItems.exit()
+      .filter(function(i, d) { return !_.contains(beingRemoved, i); })
+      .each(function(i, d) { beingRemoved.push(i); })
+      .transition().duration(animDuration).attr('transform',
+        'translate(' + targetItemX + ', ' + itemDim.startY + ')')
+      .transition().attr(
+        'transform', 'translate(' + (2 * targetItemX) + ', 0)').style('opacity', 0)
+      .each('end', function() { drawFullStatus(full); onFinish(); })
+      .remove();
+
   }
 
   function isFull() {
-    return gStack.length === maxNumberOfItems;
+    return stack.length === maxNumberOfItems;
   }
 
   function drawFullStatus(isFull) {
     stackInner.transition().duration(700).style('opacity', isFull ? 100 : 0);
-  }
-
-  function drawItem(itemText) {
-    var gItem = svgContainer.append('g');
-    appendRectangle(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
-                   .attr('fill', 'none');
-    appendText(gItem, itemDim.startX, itemDim.startY, itemDim.width, itemText);
-    return gItem;
   }
 
   function randInt() {
@@ -74,7 +107,7 @@ function createEmptyStack(svgContainer) {
   }
 
   function getStackBottom() {
-    return stackY + stackHeight;
+    return stackY + stackHeight - 2;
   }
 
   return {
@@ -83,14 +116,6 @@ function createEmptyStack(svgContainer) {
     'randInt': randInt
   }
 
-}
-
-function appendText(svgContainer, x, y, w, text) {
-  svgContainer.append('text')
-    .attr('x', x + (w / 2))
-    .attr('y', y + (w / 2))
-    .attr('text-anchor', 'middle')
-    .text(text);
 }
 
 function appendRectangle(svgContainer, x, y, w, h, color) {
