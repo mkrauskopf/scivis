@@ -63,14 +63,8 @@ function createEmptyStack(svgContainer) {
         .attr('y', itemDim.startY + (itemDim.width / 2))
         .attr('text-anchor', 'middle')
         .text(function(d) { return d; });
-    addedItems.append('rect')
-        .attr('x', itemDim.startX)
-        .attr('y', itemDim.startY)
-        .attr('width', itemDim.width)
-        .attr('height', itemDim.height)
-        .attr('stroke-width', 2)
-        .attr('fill', 'none')
-        .attr('stroke', 'blue');
+    d3Utils.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
+        .attr('fill', 'none');
 
     // animate push action on enter
     var computeY = function(i) {
