@@ -95,9 +95,10 @@ function createEmptyStack(stackAbstrSvg) {
     gItems.exit()
       .transition().duration(animDuration).attr('transform',
         'translate(' + targetItemX + ', ' + itemDim.startY + ')')
+      .each('start', function() { drawFullStatus(full); })
       .transition().attr(
         'transform', 'translate(' + (2 * targetItemX) + ', 0)').style('opacity', 0)
-      .each('end', function() { drawFullStatus(full); onFinish(); })
+      .each('end', function() { onFinish(); })
       .remove();
 
   }
