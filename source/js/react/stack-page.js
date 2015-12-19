@@ -64,7 +64,7 @@ module.exports = function() {
       <p>
         Visualization of <em>stack</em> data structure abstraction (fixed-size for now).
         Use <em>push</em> and <em>pop</em> buttons to manage stack items.<br/>
-        Stack checks and indicates when it it becomes full.
+        Stack checks and indicates when it becomes full.
       </p>
       <div className='row'>
         <div className='col-md-2'>
