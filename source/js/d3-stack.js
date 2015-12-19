@@ -125,6 +125,9 @@ function createEmptyStack(stackAbstrSvg) {
 
 }
 
+/**
+ * Creates SVG scene with empty stack and returns a stack object.
+ */
 function createScene(containerSelector) {
   stackDim.height = maxNumberOfItems * (itemDim.height + (itemDim.padding)) + itemDim.padding;
   containerHeight = stackDim.height + 100;
@@ -141,7 +144,7 @@ function createScene(containerSelector) {
   var sepX = (stackDim.x + (stackDim.width / 2)) * 2;
   d3Utils.appendLine(stackAbstrSvg, sepX, 0, sepX, containerHeight, 1, "#ccc");
 
-  return stackAbstrSvg;
+  return createEmptyStack(stackAbstrSvg);
 }
 
 function drawStackBody(stackAbstrSvg) {
@@ -174,7 +177,6 @@ function drawStackBody(stackAbstrSvg) {
 }
 
 module.exports = {
-  'createScene' : createScene,
-  'createEmptyStack' : createEmptyStack
+  'createScene' : createScene
 }
 

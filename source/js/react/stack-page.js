@@ -5,7 +5,6 @@ var ReactDOM = require('react-dom');
 var commons = require('./commons');
 var d3stack = require('../d3-stack.js');
 
-var stackSvg;
 var stack;
 
 var PageHeader = React.createClass({
@@ -76,8 +75,7 @@ module.exports = function() {
     document.getElementById('container')
   );
 
-  stackSvg = d3stack.createScene('#stackContainer');
-  stack = d3stack.createEmptyStack(stackSvg);
+  stack = d3stack.createScene('#stackContainer');
 
 }
 
