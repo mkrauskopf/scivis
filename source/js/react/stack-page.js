@@ -31,7 +31,8 @@ var StackButtons = React.createClass({
 
   handlePush: function(event) {
     this.disableUI();
-    stack.push(stack.randInt(), this.enableUI);
+    var rand100 = Math.floor(Math.random() * 100);
+    stack.push(rand100, this.enableUI);
   },
 
   handlePop: function(event) {
