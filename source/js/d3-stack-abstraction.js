@@ -33,8 +33,8 @@ function prepareContainer(svgContainer, stackSize) {
   var containerHeight = svgContainer.attr('height');
 
   bodyDim = { // center to parent container
-    'height': 0.7 * containerHeight,
-    'y': 0.15 * containerHeight,
+    'height': 0.65 * containerHeight,
+    'y': 0.175 * containerHeight,
     'width': 0.25 * containerWidth,
     'x': 0.375 * containerWidth
   }
