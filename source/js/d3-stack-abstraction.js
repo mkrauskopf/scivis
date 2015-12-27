@@ -13,7 +13,7 @@ var itemDim = {
   'startY': 4,
   'width': undefined,
   'height': undefined,
-  'padding': 3
+  'padding': 4
 }
 
 
@@ -40,7 +40,7 @@ function prepareContainer(svgContainer, stackSize) {
   }
 
   itemDim.width = bodyDim.width - (2 * itemDim.padding);
-  itemDim.height = (bodyDim.height / stackSize) - (2 * itemDim.padding);
+  itemDim.height = (bodyDim.height / stackSize) - itemDim.padding;
 
   // draw static stack body bellow
   // specify the path points
@@ -88,7 +88,7 @@ function render(stack, onFinish) {
 
   // animate push action on enter
   var computeY = function(i) {
-    return getStackBottom() - ((i + 1) * (itemDim.height + (2 * itemDim.padding))) - (itemDim.startY / 2) + itemDim.padding
+    return getStackBottom() - ((i + 1) * (itemDim.height + (itemDim.padding))) - (itemDim.startY / 2) + (itemDim.padding / 2);
   }
   var targetItemX = bodyDim.x - itemDim.startX + itemDim.padding;
   var full = stack.isFull();
