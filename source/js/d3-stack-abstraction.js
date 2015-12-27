@@ -4,7 +4,7 @@ var d3 = require('d3');
 var d3Utils = require('./d3-utils');
 
 var svgContainer;
-var animDuration = 50;
+var animDuration = 250;
 
 // 'undefined' to be computed based on parent container size
 var bodyDim = undefined;
