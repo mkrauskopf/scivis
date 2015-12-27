@@ -56,25 +56,25 @@ function Stack(listeners) {
  * Creates SVG scene with empty stack and returns a stack object.
  */
 function createScene(containerSelector) {
-  var containerWidth = 600, containerHeight = 400;
+  var containerWidth = 700, containerHeight = 300;
 
   var svgContainer = d3.select(containerSelector).append('svg')
                                                  .attr('height', containerHeight)
                                                  .attr('width', containerWidth);
+  // vertical separators
+  _.each([containerWidth/3, containerWidth*2/3], function(x) {
+    d3Utils.appendLine(svgContainer, x, 0, x, containerHeight, 1, '#ccc');
+  });
+
   // main container border
   d3Utils.appendRectangle(svgContainer, 0, 0, containerWidth, containerHeight, '#ccc').style('fill', 'none');
 
   var stackAbstrSvg = svgContainer.append('g').attr('id', 'stackAbstr')
                                               .attr('height', containerHeight)
-                                              .attr('width', 200);
+                                              .attr('width', containerWidth/3);
 
 
   var d3StackAbstrInst = d3StackAbstr(stackAbstrSvg, stackSize);
-
-  // vertical separators
-  _.each([200, 400], function(x) {
-    d3Utils.appendLine(svgContainer, x, 0, x, containerHeight, 1, '#ccc');
-  });
 
   return new Stack([d3StackAbstrInst]);
 }

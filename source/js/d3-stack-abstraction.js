@@ -4,22 +4,18 @@ var d3 = require('d3');
 var d3Utils = require('./d3-utils');
 
 var svgContainer;
-var animDuration = 300;
+var animDuration = 50;
 
+// 'undefined' to be computed based on parent container size
+var bodyDim = undefined;
 var itemDim = {
   'startX': 4,
   'startY': 4,
-  'width': 40,
-  'height': 30,
-  'padding': 4
+  'width': undefined,
+  'height': undefined,
+  'padding': 3
 }
 
-var bodyDim = {
-  'x': 80,
-  'y': 60,
-  'height': undefined,
-  'width': undefined
-}
 
 var innerBodyFill;
 
@@ -33,10 +29,20 @@ function create(_svgContainer, stackSize) {
 }
 
 function prepareContainer(svgContainer, stackSize) {
-  // static stack body bellow
-  bodyDim.height = stackSize * (itemDim.height + (itemDim.padding)) + itemDim.padding;
-  bodyDim.width = itemDim.width + (itemDim.padding * 2);
+  var containerWidth = svgContainer.attr('width');
+  var containerHeight = svgContainer.attr('height');
 
+  bodyDim = { // center to parent container
+    'height': 0.7 * containerHeight,
+    'y': 0.15 * containerHeight,
+    'width': 0.25 * containerWidth,
+    'x': 0.375 * containerWidth
+  }
+
+  itemDim.width = bodyDim.width - (2 * itemDim.padding);
+  itemDim.height = (bodyDim.height / stackSize) - (2 * itemDim.padding);
+
+  // draw static stack body bellow
   // specify the path points
   var pathInfo = [{x:bodyDim.x, y:bodyDim.y},
                   {x:bodyDim.x, y:bodyDim.y + bodyDim.height},
@@ -73,17 +79,18 @@ function render(stack, onFinish) {
   var addedItems = gItems.enter().append('g');
   addedItems.append('text')
       .attr('x', itemDim.startX + (itemDim.width / 2))
-      .attr('y', itemDim.startY + (itemDim.width / 2))
+      .attr('y', itemDim.startY + (itemDim.height / 2))
       .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
       .text(function(d) { return d; });
   d3Utils.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
       .attr('fill', 'none');
 
   // animate push action on enter
   var computeY = function(i) {
-    return getStackBottom() - ((i + 1) * (itemDim.height + itemDim.padding)) - (itemDim.startY / 2);
+    return getStackBottom() - ((i + 1) * (itemDim.height + (2 * itemDim.padding))) - (itemDim.startY / 2) + itemDim.padding
   }
-  var targetItemX = bodyDim.x + (itemDim.padding / 2) - (itemDim.startX / 2);
+  var targetItemX = bodyDim.x - itemDim.startX + itemDim.padding;
   var full = stack.isFull();
   addedItems
     .transition().duration(animDuration).attr('transform',
