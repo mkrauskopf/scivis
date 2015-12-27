@@ -3,7 +3,7 @@
 var d3 = require('d3');
 var d3Utils = require('./d3-utils');
 var d3StackAbstr = require('./d3-stack-abstraction.js');
-var _ = require('underscore');
+var _ = require('lodash');
 
 var stackSize = 6;
 
