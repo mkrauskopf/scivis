@@ -1,11 +1,13 @@
 'use strict';
 
 var d3 = require('d3');
-var d3Utils = require('./d3-utils');
+var d3_ = require('./d3-utils');
 var d3StackAbstr = require('./d3-stack-abstraction.js');
+var d3StackList = require('./d3-stack-list.js');
 var _ = require('lodash');
 
 var stackSize = 6;
+var animDuration = 250;
 
 function Stack(listeners) {
 
@@ -56,27 +58,31 @@ function Stack(listeners) {
  * Creates SVG scene with empty stack and returns a stack object.
  */
 function createScene(containerSelector) {
-  var containerWidth = 700, containerHeight = 300;
+  var contW = 700, contH = 300;
 
   var svgContainer = d3.select(containerSelector).append('svg')
-                                                 .attr('height', containerHeight)
-                                                 .attr('width', containerWidth);
-  // vertical separators
-  _.each([containerWidth/3, containerWidth*2/3], function(x) {
-    d3Utils.appendLine(svgContainer, x, 0, x, containerHeight, 1, '#ccc');
-  });
+                                                 .attr('height', contH)
+                                                 .attr('width', contW);
+  d3_.appendLine(svgContainer, contW/3, 0, contW/3, contH, 1, '#ccc'); // vertical
+  d3_.appendLine(svgContainer, contW/3, contH/2, contW, contH/2, 1, '#ccc'); // horizontal
 
   // main container border
-  d3Utils.appendRectangle(svgContainer, 0, 0, containerWidth, containerHeight, '#ccc').style('fill', 'none');
+  d3_.appendRectangle(svgContainer, 0, 0, contW, contH, '#ccc').style('fill', 'none');
 
   var stackAbstrSvg = svgContainer.append('g').attr('id', 'stackAbstr')
-                                              .attr('height', containerHeight)
-                                              .attr('width', containerWidth/3);
+                                              .attr('height', contH)
+                                              .attr('width', contW/3);
+
+  var stackListSvg = svgContainer.append('g').attr('id', 'stackList')
+                                             .attr('height', contH / 2)
+                                             .attr('width', contW / 1.5)
+                                             .attr('transform', d3_.translateStr(contW/3, 0));
 
 
-  var d3StackAbstrInst = d3StackAbstr(stackAbstrSvg, stackSize);
-
-  return new Stack([d3StackAbstrInst]);
+  return new Stack([
+      d3StackAbstr(stackAbstrSvg, stackSize, animDuration),
+      d3StackList(stackListSvg, stackSize, animDuration)
+  ]);
 }
 
 module.exports = {

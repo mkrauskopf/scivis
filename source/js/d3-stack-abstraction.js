@@ -1,10 +1,10 @@
 'use strict';
 
 var d3 = require('d3');
-var d3Utils = require('./d3-utils');
+var d3_ = require('./d3-utils');
 
 var svgContainer;
-var animDuration = 250;
+var animDuration;
 
 // 'undefined' to be computed based on parent container size
 var bodyDim = undefined;
@@ -18,33 +18,31 @@ var itemDim = {
 
 var innerBodyFill;
 
-function create(_svgContainer, stackSize) {
+function create(_svgContainer, stackSize, _animDuration) {
   svgContainer = _svgContainer;
+  animDuration = _animDuration;
 
   computeDimensions(stackSize);
   drawStackBody();
 
-  return {
-    "stackSizeChanged": render
-  }
-
+  return { "stackSizeChanged": render }
 }
 
+/** Computes stack body and item dimensions based on parent container dimension. */
 function computeDimensions(stackSize) {
-  var containerWidth = svgContainer.attr('width');
-  var containerHeight = svgContainer.attr('height');
+  var containerDim = d3_.computeDimension(svgContainer);
 
   bodyDim = { // center to parent container
-    'height': 0.65 * containerHeight,
-    'y': 0.175 * containerHeight,
-    'width': 0.25 * containerWidth,
-    'x': 0.375 * containerWidth
+    'height': 0.65 * containerDim.height,
+    'y': 0.175 * containerDim.height,
+    'width': 0.25 * containerDim.width,
+    'x': 0.375 * containerDim.width
   }
 
   itemDim.width = bodyDim.width - (2 * itemDim.padding);
   itemDim.height = (bodyDim.height / stackSize) - itemDim.padding;
 }
-  
+
 function drawStackBody() {
   // draw static stack body bellow
   // specify the path points
@@ -66,7 +64,7 @@ function drawStackBody() {
       .style('fill', 'none');
 
   // fill of the stack which become visible when stack is full
-  innerBodyFill = d3Utils
+  innerBodyFill = d3_
     .appendRectangle(svgContainer, bodyDim.x, bodyDim.y, bodyDim.width, bodyDim.height, 'none')
       .attr('fill', '#fcc')
       .attr('opacity', '0');
@@ -85,7 +83,7 @@ function render(stack, onFinish) {
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .text(function(d) { return d; });
-  d3Utils.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
+  d3_.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
       .attr('fill', 'none');
 
   // animate push action on enter
@@ -94,12 +92,11 @@ function render(stack, onFinish) {
   }
   var targetItemX = bodyDim.x - itemDim.startX + itemDim.padding;
   var full = stack.isFull();
-  addedItems
-    .transition().duration(animDuration).attr('transform',
-        function(d,i) { return 'translate(' + targetItemX + ', 0)' })
-    .transition().attr('transform',
-        function(d,i) { return 'translate(' + targetItemX + ', ' + computeY(i) + ')' })
-    .each('end', function() { drawFullStatus(full); onFinish(); });
+
+  d3_.animTransformXY(animDuration, addedItems, [
+      function(d,i) { return [targetItemX, 0] },
+      function(d,i) { return [targetItemX, computeY(i)] }
+  ]).each('end', function() { drawFullStatus(full); onFinish(); });
 
   // no update section - items cannot be updated. Just added or removed.
 
@@ -107,10 +104,9 @@ function render(stack, onFinish) {
   var transY = (getStackBottom() - (stack.items.length * (itemDim.height + itemDim.padding)));
   gItems.exit()
     .transition().duration(animDuration).attr('transform',
-      'translate(' + targetItemX + ', ' + itemDim.startY + ')')
+      d3_.translateStr(targetItemX, itemDim.startX))
     .each('start', function() { drawFullStatus(full); })
-    .transition().attr(
-      'transform', 'translate(' + (2 * targetItemX) + ', 0)').style('opacity', 0)
+    .transition().attr('transform', d3_.translateStr(2 * targetItemX, 0)).style('opacity', 0)
     .each('end', function() { onFinish(); })
     .remove();
 }
