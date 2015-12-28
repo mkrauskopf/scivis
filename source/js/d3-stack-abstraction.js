@@ -16,11 +16,13 @@ var itemDim = {
   'padding': 4
 }
 
-
 var innerBodyFill;
 
 function create(_svgContainer, stackSize) {
-  svgContainer = prepareContainer(_svgContainer, stackSize);
+  svgContainer = _svgContainer;
+
+  computeDimensions(stackSize);
+  drawStackBody();
 
   return {
     "stackSizeChanged": render
@@ -28,7 +30,7 @@ function create(_svgContainer, stackSize) {
 
 }
 
-function prepareContainer(svgContainer, stackSize) {
+function computeDimensions(stackSize) {
   var containerWidth = svgContainer.attr('width');
   var containerHeight = svgContainer.attr('height');
 
@@ -41,7 +43,9 @@ function prepareContainer(svgContainer, stackSize) {
 
   itemDim.width = bodyDim.width - (2 * itemDim.padding);
   itemDim.height = (bodyDim.height / stackSize) - itemDim.padding;
-
+}
+  
+function drawStackBody() {
   // draw static stack body bellow
   // specify the path points
   var pathInfo = [{x:bodyDim.x, y:bodyDim.y},
@@ -66,11 +70,9 @@ function prepareContainer(svgContainer, stackSize) {
     .appendRectangle(svgContainer, bodyDim.x, bodyDim.y, bodyDim.width, bodyDim.height, 'none')
       .attr('fill', '#fcc')
       .attr('opacity', '0');
-
-  return svgContainer;
 }
 
-/** Renders and animates stack abstraction part. */
+/** Renders and animates stack abstraction. */
 function render(stack, onFinish) {
   // bind data
   var gItems = svgContainer.selectAll('g').data(stack.items);
