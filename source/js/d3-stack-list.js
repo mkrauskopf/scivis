@@ -56,12 +56,12 @@ function enterNewItems(addedItems) {
 }
 
 function computeX(i, currentStackLength) {
-  return Math.abs(i - currentStackLength) * (itemDim.width + arrowLength) - arrowLength;
+  return Math.abs(i - currentStackLength) * (itemDim.width + arrowLength);
 }
 
 function updateItems(items, currentStackLength) {
   d3_.animTransformXY(animDuration, items, function(d,i) {
-   return [ computeX(i, currentStackLength), (containerDim.height / 2) - (itemDim.height / 2) ];
+   return [ computeX(i, currentStackLength) - arrowLength, (containerDim.height / 2) - (itemDim.height / 2) ];
   });
 }
 
