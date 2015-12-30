@@ -48,8 +48,19 @@ function Stack(listeners) {
     return this.items.length === 0;
   }
 
-  function notifySizeChanged(onFinish) {
-    _.each(listeners, function(listener) { listener.stackSizeChanged(self, onFinish); });
+  /**
+   * Notifies all renderers about stack size change and when all finish calls 'onAllFinish' callback.
+   */
+  function notifySizeChanged(onAllFinish) {
+    var nOfFinished = 0;
+    function onOneFinish() {
+      if (++nOfFinished == listeners.length) {
+        onAllFinish();
+      }
+    }
+    _.each(listeners, function(listener) {
+      listener.stackSizeChanged(self, onOneFinish);
+    });
   }
 
 }
