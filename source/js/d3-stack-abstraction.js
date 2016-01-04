@@ -71,7 +71,7 @@ function drawStackBody() {
 }
 
 /** Renders and animates stack abstraction. */
-function render(stack, onFinish) {
+function render(stack, onRenderingFinished) {
   // bind data
   var gItems = svgContainer.selectAll('g').data(stack.items);
 
@@ -96,7 +96,7 @@ function render(stack, onFinish) {
   d3_.animTransformXY(animDuration, addedItems, [
       function(d,i) { return [targetItemX, 0] },
       function(d,i) { return [targetItemX, computeY(i)] }
-  ]).each('end', function() { drawFullStatus(full); onFinish(); });
+  ]).each('end', function() { drawFullStatus(full); onRenderingFinished(); });
 
   // no update section - items cannot be updated. Just added or removed.
 
@@ -107,7 +107,7 @@ function render(stack, onFinish) {
       d3_.translateStr(targetItemX, itemDim.startX))
     .each('start', function() { drawFullStatus(full); })
     .transition().attr('transform', d3_.translateStr(2 * targetItemX, 0)).style('opacity', 0)
-    .each('end', function() { onFinish(); })
+    .each('end', function() { onRenderingFinished(); })
     .remove();
 }
 

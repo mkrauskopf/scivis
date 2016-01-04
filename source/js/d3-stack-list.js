@@ -38,12 +38,12 @@ function computeDimensions(stackSize) {
 }
 
 /** Renders and animates stack abstraction. */
-function render(stack, onFinish) {
+function render(stack, onRenderingFinished) {
   var gItems = svgContainer.selectAll('g.item').data(stack.items);
   var lineLinks = svgContainer.selectAll('line.link').data(stack.items.slice(1));
   enterNewItems(gItems.enter().append('g').attr('class', 'item'));
-  updateItems(gItems, lineLinks, stack.items.length, onFinish);
-  exitItems(gItems.exit(), lineLinks.exit(), onFinish);
+  updateItems(gItems, lineLinks, stack.items.length, onRenderingFinished);
+  exitItems(gItems.exit(), lineLinks.exit(), onRenderingFinished);
 }
 
 function enterNewItems(gItems) {
@@ -58,16 +58,16 @@ function enterNewItems(gItems) {
     .text(function(d) { return d; });
 }
 
-function updateItems(gItems, lineLinks, currentStackLength, onFinish) {
+function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished) {
   // move current items
   var yItemDelta = containerMidY() - (itemDim.height / 2) - itemDim.startY;
   d3_.animTransformXY(animDuration, gItems, function(d,i) {
     return [ xItemDelta(i, currentStackLength), yItemDelta ];
   }).call(endall, function() {
     if (currentStackLength > 1) {
-      drawFirstLink(onFinish);
+      drawFirstLink(onRenderingFinished);
     } else {
-      onFinish();
+      onRenderingFinished();
     }
   });
 
@@ -80,9 +80,9 @@ function updateItems(gItems, lineLinks, currentStackLength, onFinish) {
     .attr("x2", function(d, i) { return xLinkDelta(i, currentStackLength) + linkLength });
 }
 
-function exitItems(gItems, lineLinks, onFinish) {
+function exitItems(gItems, lineLinks, onRenderingFinished) {
   d3_.animTransformXY(animDuration, gItems, function(d,i) { return [0, 0] }).remove()
-     .call(endall, onFinish);
+     .call(endall, onRenderingFinished);
   lineLinks.remove();
 }
 
@@ -98,7 +98,7 @@ function xLinkDelta(i, currentStackLength) {
   return xItemDelta(i + 1, currentStackLength) + itemDim.width + 4
 }
 
-function drawFirstLink(onFinish) {
+function drawFirstLink(onRenderingFinished) {
   var lineStartX = xItemDelta(0, 1) + itemDim.width + 4;
   var lineLinks = svgContainer.append('line')
     .attr('class', 'link')
@@ -110,7 +110,7 @@ function drawFirstLink(onFinish) {
     .attr("stroke", "black")
     .transition().duration(animDuration)
     .attr("x2", lineStartX + linkLength)
-    .each('end', function() { onFinish(); });
+    .each('end', function() { onRenderingFinished(); });
 }
 
 function containerMidY() {

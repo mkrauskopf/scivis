@@ -18,12 +18,12 @@ function Stack(listeners) {
   /**
    * Pops item from the stack.
    *
-   * @param onFinish - callback which will be called on the end of the rendering phase
+   * @param onRenderingFinished - callback which will be called on the end of the rendering phase
    */
-  this.pop = function(onFinish) {
+  this.pop = function(onRenderingFinished) {
     if (!this.isEmpty()) {
       this.items.pop();
-      notifySizeChanged(onFinish);
+      notifySizeChanged(onRenderingFinished);
     }
   }
 
@@ -31,12 +31,12 @@ function Stack(listeners) {
    * Push item to the stack.
    *
    * @param itemText - will be renderer as item's text
-   * @param onFinish - callback which will be called on the end of the rendering phase
+   * @param onRenderingFinished - callback which will be called on the end of the rendering phase
    */
-  this.push = function(itemText, onFinish) {
+  this.push = function(itemText, onRenderingFinished) {
     if (this.items.length < stackSize) {
       this.items.push(itemText);
-      notifySizeChanged(onFinish);
+      notifySizeChanged(onRenderingFinished);
     }
   }
 
@@ -49,13 +49,14 @@ function Stack(listeners) {
   }
 
   /**
-   * Notifies all renderers about stack size change and when all finish calls 'onAllFinish' callback.
+   * Notifies all renderers about stack size change such that they can redraw their scene. When all renderers are done
+   * with reacting to the event 'onRenderingFinished' callback is called.
    */
-  function notifySizeChanged(onAllFinish) {
+  function notifySizeChanged(onRenderingFinished) {
     var nOfFinished = 0;
     function onOneFinish() {
       if (++nOfFinished == listeners.length) {
-        onAllFinish();
+        onRenderingFinished();
       }
     }
     _.each(listeners, function(listener) {
