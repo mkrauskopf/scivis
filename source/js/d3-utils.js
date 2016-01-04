@@ -51,11 +51,19 @@ function animTransformXY(dur, d3Selection, xyComputations) {
   return d3Selection;
 }
 
+function endAll(transition, callback) {
+  var n = 0;
+  transition
+    .each(function() { ++n; })
+    .each("end", function() { if (!--n) callback.apply(this, arguments); });
+}
+
 module.exports = {
   'appendRectangle' : appendRectangle,
   'appendLine' : appendLine,
   'computeDimension' : computeDimension,
   'translateStr' : translateStr,
-  'animTransformXY' : animTransformXY
+  'animTransformXY' : animTransformXY,
+  'endAll' : endAll
 }
 

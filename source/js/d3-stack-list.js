@@ -63,7 +63,7 @@ function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished)
   var yItemDelta = containerMidY() - (itemDim.height / 2) - itemDim.startY;
   d3_.animTransformXY(animDuration, gItems, function(d,i) {
     return [ xItemDelta(i, currentStackLength), yItemDelta ];
-  }).call(endall, function() {
+  }).call(_d3.endAll, function() {
     if (currentStackLength > 1) {
       drawFirstLink(onRenderingFinished);
     } else {
@@ -82,7 +82,7 @@ function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished)
 
 function exitItems(gItems, lineLinks, onRenderingFinished) {
   d3_.animTransformXY(animDuration, gItems, function(d,i) { return [0, 0] }).remove()
-     .call(endall, onRenderingFinished);
+     .call(_d3.endAll, onRenderingFinished);
   lineLinks.remove();
 }
 
@@ -115,13 +115,6 @@ function drawFirstLink(onRenderingFinished) {
 
 function containerMidY() {
   return containerDim.height / 2;
-}
-
-function endall(transition, callback) {
-  var n = 0;
-  transition
-    .each(function() { ++n; })
-    .each("end", function() { if (!--n) callback.apply(this, arguments); });
 }
 
 module.exports = create;
