@@ -43,7 +43,7 @@ function render(stack, onFinish) {
   var lineLinks = svgContainer.selectAll('line.link').data(stack.items.slice(1));
   enterNewItems(gItems.enter().append('g').attr('class', 'item'));
   updateItems(gItems, lineLinks, stack.items.length, onFinish);
-  exitItems(gItems.exit(), lineLinks.exit());
+  exitItems(gItems.exit(), lineLinks.exit(), onFinish);
 }
 
 function enterNewItems(gItems) {
@@ -80,8 +80,9 @@ function updateItems(gItems, lineLinks, currentStackLength, onFinish) {
     .attr("x2", function(d, i) { return xLinkDelta(i, currentStackLength) + linkLength });
 }
 
-function exitItems(gItems, lineLinks) {
-  d3_.animTransformXY(animDuration, gItems, function(d,i) { return [0, 0] }).remove();
+function exitItems(gItems, lineLinks, onFinish) {
+  d3_.animTransformXY(animDuration, gItems, function(d,i) { return [0, 0] }).remove()
+     .call(endall, onFinish);
   lineLinks.remove();
 }
 
