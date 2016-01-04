@@ -1,9 +1,11 @@
 'use strict';
 
+var exports = {};
+
 var d3 = require('d3');
 var _ = require('lodash');
 
-function appendRectangle(svgContainer, x, y, w, h, color) {
+exports.appendRectangle = function(svgContainer, x, y, w, h, color) {
   return svgContainer
     .append('rect')
       .attr('x', x)
@@ -14,7 +16,7 @@ function appendRectangle(svgContainer, x, y, w, h, color) {
       .attr('stroke', color ? color : 'black');
 }
 
-function appendLine(svgContainer, x1, y1, x2, y2, strokeWidth, color) {
+exports.appendLine = function(svgContainer, x1, y1, x2, y2, strokeWidth, color) {
   return svgContainer
     .append("line")
       .attr("x1", x1)
@@ -25,7 +27,7 @@ function appendLine(svgContainer, x1, y1, x2, y2, strokeWidth, color) {
       .attr("stroke", color);
 }
 
-function computeDimension(svgElement) {
+exports.computeDimension = function(svgElement) {
   return {
     'width': svgElement.attr('width'),
     'height': svgElement.attr('height')
@@ -35,8 +37,9 @@ function computeDimension(svgElement) {
 function translateStr(x, y) {
   return 'translate(' + x + ', ' + y + ')';
 }
+exports.translateStr = translateStr;
 
-function animTransformXY(dur, d3Selection, xyComputations) {
+exports.animTransformXY = function(dur, d3Selection, xyComputations) {
   if (typeof xyComputations === "function") {
     // allow to pass a function as well as array of functions
     xyComputations = [xyComputations]
@@ -51,19 +54,12 @@ function animTransformXY(dur, d3Selection, xyComputations) {
   return d3Selection;
 }
 
-function endAll(transition, callback) {
+exports.endAll = function(transition, callback) {
   var n = 0;
   transition
     .each(function() { ++n; })
     .each("end", function() { if (!--n) callback.apply(this, arguments); });
 }
 
-module.exports = {
-  'appendRectangle' : appendRectangle,
-  'appendLine' : appendLine,
-  'computeDimension' : computeDimension,
-  'translateStr' : translateStr,
-  'animTransformXY' : animTransformXY,
-  'endAll' : endAll
-}
+module.exports = exports;
 
