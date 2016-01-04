@@ -63,7 +63,7 @@ function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished)
   var yItemDelta = containerMidY() - (itemDim.height / 2) - itemDim.startY;
   d3_.animTransformXY(animDuration, gItems, function(d,i) {
     return [ xItemDelta(i, currentStackLength), yItemDelta ];
-  }).call(_d3.endAll, function() {
+  }).call(d3_.endAll, function() {
     if (currentStackLength > 1) {
       drawFirstLink(onRenderingFinished);
     } else {
@@ -82,7 +82,7 @@ function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished)
 
 function exitItems(gItems, lineLinks, onRenderingFinished) {
   d3_.animTransformXY(animDuration, gItems, function(d,i) { return [0, 0] }).remove()
-     .call(_d3.endAll, onRenderingFinished);
+     .call(d3_.endAll, onRenderingFinished);
   lineLinks.remove();
 }
 
