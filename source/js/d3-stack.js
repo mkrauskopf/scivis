@@ -25,7 +25,7 @@ function Stack(listeners) {
       this.items.pop();
       notifySizeChanged(onRenderingFinished);
     }
-  }
+  };
 
   /**
    * Push item to the stack.
@@ -38,15 +38,15 @@ function Stack(listeners) {
       this.items.push(itemText);
       notifySizeChanged(onRenderingFinished);
     }
-  }
+  };
 
   this.isFull = function() {
     return this.items.length === stackSize;
-  }
+  };
 
   this.isEmpty = function() {
     return this.items.length === 0;
-  }
+  };
 
   /**
    * Notifies all renderers about stack size change such that they can redraw their scene. When all renderers are done
@@ -99,5 +99,5 @@ function createScene(containerSelector) {
 
 module.exports = {
   'createScene' : createScene
-}
+};
 

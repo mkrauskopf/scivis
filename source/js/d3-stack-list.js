@@ -14,7 +14,7 @@ var itemDim = {
   'startY': 4,
   'width': undefined,
   'height': undefined
-}
+};
 
 var linkLength;
 
@@ -24,7 +24,7 @@ function create(_svgContainer, stackSize, _animDuration) {
 
   computeDimensions(stackSize);
 
-  return { "stackSizeChanged": render }
+  return { 'stackSizeChanged': render }
 }
 
 /** Computes item dimension based on parent container dimension. */

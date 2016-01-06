@@ -14,7 +14,7 @@ exports.appendRectangle = function(svgContainer, x, y, w, h, color) {
       .attr('width', w)
       .attr('stroke-width', 2)
       .attr('stroke', color ? color : 'black');
-}
+};
 
 exports.appendLine = function(svgContainer, x1, y1, x2, y2, strokeWidth, color) {
   return svgContainer
@@ -25,14 +25,14 @@ exports.appendLine = function(svgContainer, x1, y1, x2, y2, strokeWidth, color) 
       .attr("y2", y2)
       .attr("stroke-width", strokeWidth)
       .attr("stroke", color);
-}
+};
 
 exports.computeDimension = function(svgElement) {
   return {
     'width': svgElement.attr('width'),
     'height': svgElement.attr('height')
   }
-}
+};
 
 function translateStr(x, y) {
   return 'translate(' + x + ', ' + y + ')';
@@ -52,14 +52,14 @@ exports.animTransformXY = function(dur, d3Selection, xyComputations) {
         });
   });
   return d3Selection;
-}
+};
 
 exports.endAll = function(transition, callback) {
   var n = 0;
   transition
     .each(function() { ++n; })
     .each("end", function() { if (!--n) callback.apply(this, arguments); });
-}
+};
 
 module.exports = exports;
 
