@@ -40,10 +40,10 @@ function computeDimensions(stackSize) {
 /** Renders and animates stack abstraction. */
 function render(stack, onRenderingFinished) {
   var gItems = svgContainer.selectAll('g.item').data(stack.items);
-  var lineLinks = svgContainer.selectAll('line.link').data(stack.items.slice(1));
+  var gLinks = svgContainer.selectAll('g.link').data(stack.items.slice(1));
   enterNewItems(gItems.enter().append('g').attr('class', 'item'));
-  updateItems(gItems, lineLinks, stack.items.length, onRenderingFinished);
-  exitItems(gItems.exit(), lineLinks.exit(), onRenderingFinished);
+  updateItems(gItems, gLinks, stack.items.length, onRenderingFinished);
+  exitItems(gItems.exit(), gLinks.exit(), onRenderingFinished);
 }
 
 function enterNewItems(gItems) {
@@ -58,12 +58,13 @@ function enterNewItems(gItems) {
     .text(function(d) { return d; });
 }
 
-function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished) {
-  // move current items
+function updateItems(gItems, gLinks, currentStackLength, onRenderingFinished) {
+  // move current items...
   var yItemDelta = containerMidY() - (itemDim.height / 2) - itemDim.startY;
   d3_.animTransformXY(animDuration, gItems, function(d,i) {
     return [ xItemDelta(i, currentStackLength), yItemDelta ];
   }).call(d3_.endAll, function() {
+    // ... and append link for newly added node
     if (currentStackLength > 1) {
       drawFirstLink(onRenderingFinished);
     } else {
@@ -72,18 +73,15 @@ function updateItems(gItems, lineLinks, currentStackLength, onRenderingFinished)
   });
 
   // move current links
-  var lineStartX = xItemDelta(0, 1) + itemDim.width + 4;
-  lineLinks
-    .filter(function(d,i) {return i < currentStackLength})
-    .transition().duration(animDuration)
-    .attr("x1", function(d, i) { return xLinkDelta(i, currentStackLength) })
-    .attr("x2", function(d, i) { return xLinkDelta(i, currentStackLength) + linkLength });
+  var linksToMove = gLinks.filter(function(d,i) {return i < currentStackLength});
+  d3_.animTransformXY(animDuration, linksToMove,
+      function(d,i) { return [xLinkDelta(i, currentStackLength), containerMidY()] });
 }
 
-function exitItems(gItems, lineLinks, onRenderingFinished) {
+function exitItems(gItems, gLinks, onRenderingFinished) {
   d3_.animTransformXY(animDuration, gItems, function(d,i) { return [0, 0] }).remove()
      .call(d3_.endAll, onRenderingFinished);
-  lineLinks.remove();
+  gLinks.remove();
 }
 
 /** Computes x-delta  of item from start position. */
@@ -99,18 +97,30 @@ function xLinkDelta(i, currentStackLength) {
 }
 
 function drawFirstLink(onRenderingFinished) {
-  var lineStartX = xItemDelta(0, 1) + itemDim.width + 4;
-  var lineLinks = svgContainer.append('line')
-    .attr('class', 'link')
-    .attr("x1", lineStartX)
-    .attr("y1", containerMidY())
-    .attr("x2", lineStartX)
-    .attr("y2", containerMidY())
-    .attr("stroke-width", 2)
-    .attr("stroke", "black")
+  var linkStartX = xItemDelta(0, 1) + itemDim.width + 4;
+
+  // main group containing arrow drawing
+  var gLink = svgContainer.append('g')
+      .attr('transform', d3_.translateStr(linkStartX, containerMidY()))
+      .attr('class', 'link');
+
+  // inner group initial set to zero width
+  var scaledGroup = gLink.append('g').attr('transform', 'scale(0, 1)');
+
+  // main line within scaled group
+  scaledGroup.append('line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr('x2', linkLength)
+    .attr('y2', 0)
+    .attr('stroke-width', 2)
+    .attr('stroke', 'black');
+
+  // enlarge scaled group from 0% to 100%
+  scaledGroup
     .transition().duration(animDuration)
-    .attr("x2", lineStartX + linkLength)
-    .each('end', function() { onRenderingFinished(); });
+    .attr('transform', 'scale(1, 1)')
+    .each('end', function() { onRenderingFinished() });
 }
 
 function containerMidY() {

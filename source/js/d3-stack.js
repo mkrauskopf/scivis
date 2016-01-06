@@ -75,21 +75,19 @@ function createScene(containerSelector) {
   var svgContainer = d3.select(containerSelector).append('svg')
                                                  .attr('height', contH)
                                                  .attr('width', contW);
-  d3_.appendLine(svgContainer, contW/3, 0, contW/3, contH, 1, '#ccc'); // vertical
-  d3_.appendLine(svgContainer, contW/3, contH/2, contW, contH/2, 1, '#ccc'); // horizontal
+  var contW3 = contW / 3;
+  d3_.appendLine(svgContainer, contW3, 0, contW3, contH, 1, '#ccc'); // vertical
+  d3_.appendLine(svgContainer, contW3, contH/2, contW, contH/2, 1, '#ccc'); // horizontal
 
   // main container border
   d3_.appendRectangle(svgContainer, 0, 0, contW, contH, '#ccc').style('fill', 'none');
 
   var stackAbstrSvg = svgContainer.append('g').attr('id', 'stackAbstr')
                                               .attr('height', contH)
-                                              .attr('width', contW/3);
+                                              .attr('width', contW3);
 
-  var stackListSvg = svgContainer.append('g').attr('id', 'stackList')
-                                             .attr('height', contH / 2)
-                                             .attr('width', contW / 1.5)
-                                             .attr('transform', d3_.translateStr(contW/3, 0));
-
+  var stackListSvg = d3_.appendGroup(svgContainer, contW3, 0, contW / 1.5, contH / 2)
+                        .attr('id', 'stackList');
 
   return new Stack([
       d3StackAbstr(stackAbstrSvg, stackSize, animDuration),

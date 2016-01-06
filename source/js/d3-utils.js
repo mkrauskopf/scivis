@@ -5,6 +5,13 @@ var exports = {};
 var d3 = require('d3');
 var _ = require('lodash');
 
+exports.appendGroup = function(svgContainer, x, y, w, h) {
+  return svgContainer.append('g')
+    .attr('width', w)
+    .attr('height', h)
+    .attr('transform', translateStr(x, y));
+};
+
 exports.appendRectangle = function(svgContainer, x, y, w, h, color) {
   return svgContainer
     .append('rect')
