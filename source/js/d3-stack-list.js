@@ -107,14 +107,11 @@ function drawFirstLink(onRenderingFinished) {
   // inner group initial set to zero width
   var scaledGroup = gLink.append('g').attr('transform', 'scale(0, 1)');
 
-  // main line within scaled group
-  scaledGroup.append('line')
-    .attr('x1', 0)
-    .attr('y1', 0)
-    .attr('x2', linkLength)
-    .attr('y2', 0)
-    .attr('stroke-width', 2)
-    .attr('stroke', 'black');
+  // draw arrow
+  d3_.appendLine(scaledGroup, 0, 0, linkLength, 0, 2, 'black'); // main line of the arrow
+  [5, -5].forEach(function(yDelta) { // side lines of the arrow
+    d3_.appendLine(scaledGroup, linkLength - 10, yDelta, linkLength, 0, 2, 'black');
+  });
 
   // enlarge scaled group from 0% to 100%
   scaledGroup
