@@ -41,8 +41,9 @@ function computeDimensions(stackSize) {
 function render(stack, onRenderingFinished) {
   var gItems = svgContainer.selectAll('g.item').data(stack.items);
   var gLinks = svgContainer.selectAll('g.link').data(stack.items.slice(1));
+  var isPush = stack.items.length > gItems.size();
   enterNewItems(gItems.enter().append('g').attr('class', 'item'));
-  updateItems(gItems, gLinks, stack.items.length, onRenderingFinished);
+  updateItems(gItems, gLinks, stack.items.length, isPush, onRenderingFinished);
   exitItems(gItems.exit(), gLinks.exit(), onRenderingFinished);
 }
 
@@ -58,14 +59,14 @@ function enterNewItems(gItems) {
     .text(function(d) { return d; });
 }
 
-function updateItems(gItems, gLinks, currentStackLength, onRenderingFinished) {
+function updateItems(gItems, gLinks, currentStackLength, isPush, onRenderingFinished) {
   // move current items...
   var yItemDelta = containerMidY() - (itemDim.height / 2) - itemDim.startY;
   d3_.animTransformXY(animDuration, gItems, function(d,i) {
     return [ xItemDelta(i, currentStackLength), yItemDelta ];
   }).call(d3_.endAll, function() {
     // ... and append link for newly added node
-    if (currentStackLength > 1) {
+    if (isPush && currentStackLength > 1) {
       drawFirstLink(onRenderingFinished);
     } else {
       onRenderingFinished();
