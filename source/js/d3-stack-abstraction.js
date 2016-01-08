@@ -32,12 +32,13 @@ function create(_svgContainer, stackSize, _animDuration) {
 function computeDimensions(stackSize) {
   var containerDim = d3_.computeDimension(svgContainer);
 
+  var width = 0.25, height = 0.65;
   bodyDim = { // center to parent container
-    'height': 0.65 * containerDim.height,
-    'y': 0.175 * containerDim.height,
-    'width': 0.25 * containerDim.width,
-    'x': 0.375 * containerDim.width
-  }
+    'x': (0.5 - (width / 2)) * containerDim.width,
+    'y': (0.5 - (height / 2)) * containerDim.height,
+    'width': width * containerDim.width,
+    'height': height * containerDim.height
+  };
 
   itemDim.width = bodyDim.width - (2 * itemDim.padding);
   itemDim.height = (bodyDim.height / stackSize) - itemDim.padding;
