@@ -4,6 +4,7 @@ var d3 = require('d3');
 var d3_ = require('./d3-utils');
 var d3StackAbstr = require('./d3-stack-abstraction.js');
 var d3StackList = require('./d3-stack-list.js');
+var d3StackArray = require('./d3-stack-array.js');
 var _ = require('lodash');
 
 var stackSize = 6;
@@ -89,9 +90,13 @@ function createScene(containerSelector) {
   var stackListSvg = d3_.appendGroup(svgContainer, contW3, 0, contW / 1.5, contH / 2)
                         .attr('id', 'stackList');
 
+  var stackArraySvg = d3_.appendGroup(svgContainer, contW3, contH / 2, contW / 1.5, contH / 2)
+                         .attr('id', 'stackArray');
+
   return new Stack([
       d3StackAbstr(stackAbstrSvg, stackSize, animDuration),
-      d3StackList(stackListSvg, stackSize, animDuration)
+      d3StackList(stackListSvg, stackSize, animDuration),
+      d3StackArray(stackArraySvg, stackSize, animDuration)
   ]);
 }
 
