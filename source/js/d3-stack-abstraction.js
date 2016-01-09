@@ -7,16 +7,14 @@ var svgContainer;
 var animDuration;
 
 // 'undefined' to be computed based on parent container size
-var bodyDim = undefined;
+var bodyDim, innerBodyFill;
 var itemDim = {
   'startX': 4,
   'startY': 4,
   'width': undefined,
   'height': undefined,
   'padding': 4
-}
-
-var innerBodyFill;
+};
 
 function create(_svgContainer, stackSize, _animDuration) {
   svgContainer = _svgContainer;
@@ -41,7 +39,7 @@ function computeDimensions(stackSize) {
   };
 
   itemDim.width = bodyDim.width - (2 * itemDim.padding);
-  itemDim.height = (bodyDim.height / stackSize) - itemDim.padding;
+  itemDim.height = ((bodyDim.height - itemDim.padding) / stackSize) - itemDim.padding;
 }
 
 function drawStackBody() {
@@ -52,7 +50,7 @@ function drawStackBody() {
                   {x:bodyDim.x, y:bodyDim.y + bodyDim.height},
                   {x:bodyDim.x + bodyDim.width, y:bodyDim.y + bodyDim.height},
                   {x:bodyDim.x + bodyDim.width, y:bodyDim.y}
-                 ]
+                 ];
 
   var line = d3.svg.line().x(function(d){return d.x;})
                           .y(function(d){return d.y;})
@@ -76,7 +74,7 @@ function render(stack, onRenderingFinished) {
   // bind data
   var gItems = svgContainer.selectAll('g').data(stack.items);
 
-  // enter
+  // D3 ENTER
   var addedItems = gItems.enter().append('g');
   addedItems.append('text')
       .attr('x', itemDim.startX + (itemDim.width / 2))
@@ -85,12 +83,12 @@ function render(stack, onRenderingFinished) {
       .attr('dominant-baseline', 'middle')
       .text(function(d) { return d; });
   d3_.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
-      .attr('fill', 'none');
+     .attr('fill', 'none');
 
   // animate push action on enter
   var computeY = function(i) {
     return getStackBottom() - ((i + 1) * (itemDim.height + (itemDim.padding))) - (itemDim.startY / 2) + (itemDim.padding / 2);
-  }
+  };
   var targetItemX = bodyDim.x - itemDim.startX + itemDim.padding;
   var full = stack.isFull();
 
@@ -99,13 +97,12 @@ function render(stack, onRenderingFinished) {
       function(d,i) { return [targetItemX, computeY(i)] }
   ]).each('end', function() { drawFullStatus(full); onRenderingFinished(); });
 
-  // no update section - items cannot be updated. Just added or removed.
+  // D3 UPDATE: no update section - items cannot be updated. Just added or removed.
 
-  // exit
-  var transY = (getStackBottom() - (stack.items.length * (itemDim.height + itemDim.padding)));
+  // D3 EXIT
   gItems.exit()
     .transition().duration(animDuration).attr('transform',
-      d3_.translateStr(targetItemX, itemDim.startX))
+      d3_.translateStr(targetItemX, itemDim.startY))
     .each('start', function() { drawFullStatus(full); })
     .transition().attr('transform', d3_.translateStr(2 * targetItemX, 0)).style('opacity', 0)
     .each('end', function() { onRenderingFinished(); })
