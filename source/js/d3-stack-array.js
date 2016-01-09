@@ -49,7 +49,6 @@ function computeDimensions(stackSize) {
   itemDim.width = ((bodyDim.width - itemDim.padding) / stackSize) - itemDim.padding;
   itemDim.height = bodyDim.height - (2 * itemDim.padding);
   itemDim.exitX = containerDim.width - itemDim.width;
-  console.log("MK>   itemDim: ", itemDim);
 }
 
 function drawArrayContainer() {
