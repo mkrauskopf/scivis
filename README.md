@@ -3,7 +3,7 @@
 * **Stack** data structure
   * abstraction
   * implementation based on linked list
-  * ~~implementation based on array~~ (soon)
+  * _initial_ implementation based on array
 
 #### Demo
 
