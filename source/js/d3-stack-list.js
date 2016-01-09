@@ -6,6 +6,8 @@ var _ = require('lodash');
 
 var svgContainer;
 var animDuration;
+var stackSize;
+var itemColors;
 var containerDim;
 var containerXPadding = 0.1;
 
@@ -19,9 +21,11 @@ var itemDim = {
 
 var linkLength;
 
-function create(_svgContainer, stackSize, _animDuration) {
+function create(_svgContainer, _stackSize, _animDuration, _itemColors) {
   svgContainer = _svgContainer;
   animDuration = _animDuration;
+  stackSize = _stackSize;
+  itemColors = _itemColors;
 
   computeDimensions(stackSize);
 
@@ -51,7 +55,7 @@ function render(stack, onRenderingFinished) {
 function enterNewItems(gItems) {
   // draw item on start position (box with text)
   d3_.appendRectangle(gItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
-    .attr('fill', 'none');
+    .attr('fill', function(d, i) { return itemColors(Math.abs(i - stackSize) - 1) });
   gItems.append('text')
     .attr('x', itemDim.startX + (itemDim.width / 2))
     .attr('y', itemDim.startY + (itemDim.height / 2))

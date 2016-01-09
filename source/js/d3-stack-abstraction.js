@@ -6,6 +6,8 @@ var _ = require('lodash');
 
 var svgContainer;
 var animDuration;
+var stackSize;
+var itemColors;
 
 // 'undefined' to be computed based on parent container size
 var bodyDim, innerBodyFill;
@@ -17,9 +19,11 @@ var itemDim = {
   'padding': 4
 };
 
-function create(_svgContainer, stackSize, _animDuration) {
+function create(_svgContainer, _stackSize, _animDuration, _itemColors) {
   svgContainer = _svgContainer;
   animDuration = _animDuration;
+  stackSize = _stackSize;
+  itemColors = _itemColors;
 
   computeDimensions(stackSize);
   drawStackBody();
@@ -77,16 +81,20 @@ function render(stack, onRenderingFinished) {
 
   // D3 ENTER
   var addedItems = gItems.enter().append('g');
+
+  // item box
+  d3_.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
+     .attr('fill', function(d, i) { return itemColors(Math.abs(i - stackSize) - 1) });
+
+  // item text
   addedItems.append('text')
       .attr('x', itemDim.startX + (itemDim.width / 2))
       .attr('y', itemDim.startY + (itemDim.height / 2))
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-  d3_.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
-     .attr('fill', 'none');
       .text(_.identity);
 
-  // animate push action on enter
+  // animate item on push action after entered
   var computeY = function(i) {
     return getStackBottom() - ((i + 1) * (itemDim.height + (itemDim.padding))) - (itemDim.startY / 2) + (itemDim.padding / 2);
   };
