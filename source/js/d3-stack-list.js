@@ -2,6 +2,7 @@
 
 var d3 = require('d3');
 var d3_ = require('./d3-utils');
+var _ = require('lodash');
 
 var svgContainer;
 var animDuration;
@@ -56,7 +57,7 @@ function enterNewItems(gItems) {
     .attr('y', itemDim.startY + (itemDim.height / 2))
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
-    .text(function(d) { return d; });
+    .text(_.identity);
 }
 
 function updateItems(gItems, gLinks, currentStackLength, isPush, onRenderingFinished) {

@@ -2,6 +2,7 @@
 
 var d3 = require('d3');
 var d3_ = require('./d3-utils');
+var _ = require('lodash');
 
 var svgContainer;
 var animDuration;
@@ -86,9 +87,9 @@ function render(stack, onRenderingFinished) {
       .attr('y', itemDim.startY + (itemDim.height / 2))
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .text(function(d) { return d; });
   d3_.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
      .attr('fill', 'none');
+      .text(_.identity);
 
   // animate push action on enter
   var computeX = function(i) {
