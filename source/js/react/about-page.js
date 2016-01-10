@@ -17,5 +17,5 @@ module.exports = function() {
      document.getElementById('container')
   );
 
-}
+};
 

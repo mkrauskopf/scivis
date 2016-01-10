@@ -1,8 +1,5 @@
 'use strict';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var renderCsPage = require('./react/cs-page');
 var commons = require('./react/commons');
 
 window.renderMainPage = require('./react/science-page');

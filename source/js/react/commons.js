@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var ReactDOM = require('react-dom');
 
 var PageHeader = React.createClass({
   render: function() {
@@ -12,5 +11,5 @@ var PageHeader = React.createClass({
 });
 
 module.exports = {
-  "PageHeader": PageHeader,
-}
+  "PageHeader": PageHeader
+};

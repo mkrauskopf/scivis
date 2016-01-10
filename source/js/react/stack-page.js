@@ -7,14 +7,6 @@ var d3stack = require('../d3-stack.js');
 
 var stack;
 
-var PageHeader = React.createClass({
-  render: function() {
-    return (
-      <h3 className='title text-center text-primary'>{this.props.children}</h3>
-    );
-  }
-});
-
 var StackButtons = React.createClass({
 
   getInitialState() {
@@ -78,5 +70,5 @@ module.exports = function() {
 
   stack = d3stack.createScene('#stackContainer');
 
-}
+};
 
