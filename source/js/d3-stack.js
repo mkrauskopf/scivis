@@ -95,7 +95,7 @@ function createScene(containerSelector) {
 
   var itemColors = d3.scale.linear()
                            .domain([0, stackSize - 1])
-                           .range(['white', '#55f']);
+                           .range(['white', 'steelblue']);
 
   return new Stack([
       d3StackAbstr(stackAbstrSvg, stackSize, animDuration, itemColors),
