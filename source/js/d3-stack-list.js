@@ -3,6 +3,7 @@
 var d3 = require('d3');
 var d3_ = require('./d3-utils');
 var _ = require('lodash');
+var stackCommons = require('./d3-stack-commons');
 
 var svgContainer;
 var animDuration;
@@ -54,14 +55,18 @@ function render(stack, onRenderingFinished) {
 
 function enterNewItems(gItems) {
   // draw item on start position (box with text)
-  d3_.appendRectangle(gItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
-    .attr('fill', function(d, i) { return itemColors(Math.abs(i - stackSize) - 1) });
-  gItems.append('text')
-    .attr('x', itemDim.startX + (itemDim.width / 2))
-    .attr('y', itemDim.startY + (itemDim.height / 2))
-    .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'middle')
-    .text(_.identity);
+  stackCommons.appendItem(
+      gItems,
+      {
+        'x': itemDim.startX,
+        'y': itemDim.startY,
+        'width': itemDim.width,
+        'height': itemDim.height
+      },
+      itemColors,
+      _.identity,
+      stackSize
+  );
 }
 
 function updateItems(gItems, gLinks, currentStackLength, isPush, onRenderingFinished) {

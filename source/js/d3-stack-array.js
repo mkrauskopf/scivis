@@ -3,13 +3,13 @@
 var d3 = require('d3');
 var d3_ = require('./d3-utils');
 var _ = require('lodash');
+var stackCommons = require('./d3-stack-commons');
 
 var svgContainer;
 var animDuration;
 var stackSize;
 var itemColors;
 var containerDim;
-var containerXPadding = 0.1;
 
 // 'undefined' to be computed based on parent container size
 var bodyDim, innerBodyFill;
@@ -85,14 +85,19 @@ function render(stack, onRenderingFinished) {
 
   // D3 ENTER
   var addedItems = gItems.enter().append('g');
-  d3_.appendRectangle(addedItems, itemDim.startX, itemDim.startY, itemDim.width, itemDim.height, 'blue')
-     .attr('fill', function(d, i) { return itemColors(Math.abs(i - stackSize) - 1) });
-  addedItems.append('text')
-      .attr('x', itemDim.startX + (itemDim.width / 2))
-      .attr('y', itemDim.startY + (itemDim.height / 2))
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'middle')
-      .text(_.identity);
+
+  stackCommons.appendItem(
+      addedItems,
+      {
+        'x': itemDim.startX,
+        'y': itemDim.startY,
+        'width': itemDim.width,
+        'height': itemDim.height
+      },
+      itemColors,
+      _.identity,
+      stackSize
+  );
 
   // animate item on push action after entered
   var computeX = function(i) {
@@ -123,10 +128,6 @@ function drawFullStatus(isFull) {
 
 function getStackLeft() {
   return bodyDim.x;
-}
-
-function containerMidY() {
-  return containerDim.height / 2;
 }
 
 module.exports = create;

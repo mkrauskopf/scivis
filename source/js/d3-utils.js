@@ -12,13 +12,17 @@ exports.appendGroup = function(svgContainer, x, y, w, h) {
     .attr('transform', translateStr(x, y));
 };
 
-exports.appendRectangle = function(svgContainer, x, y, w, h, color) {
+exports.appendRectangle = function (svgContainer, xOrRect, y, width, height, color) {
+  var rect = arguments.length > 2
+                 ? { 'x': xOrRect, 'y': y, 'width': width, 'height': height }
+                 : xOrRect;
+
   return svgContainer
-    .append('rect')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('height', h)
-      .attr('width', w)
+      .append('rect')
+      .attr('x', rect.x)
+      .attr('y', rect.y)
+      .attr('width', rect.width)
+      .attr('height', rect.height)
       .attr('stroke-width', 2)
       .attr('stroke', color ? color : 'black');
 };
