@@ -32,7 +32,6 @@ var StackButtons = React.createClass({
     stack.pop(this.enableUI);
   },
 
-
   render: function() {
     return (
       <div>
