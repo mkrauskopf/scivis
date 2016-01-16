@@ -22,7 +22,7 @@ var itemDim = {
 
 var linkLength;
 
-function create(_svgContainer, _stackSize, _animDuration, _itemColors) {
+function createScene(_svgContainer, _stackSize, _animDuration, _itemColors) {
   svgContainer = _svgContainer;
   animDuration = _animDuration;
   stackSize = _stackSize;
@@ -135,4 +135,4 @@ function containerMidY() {
   return containerDim.height / 2;
 }
 
-module.exports = create;
+module.exports = createScene;

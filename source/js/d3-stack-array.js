@@ -22,7 +22,7 @@ var itemDim = {
   'padding': 4
 };
 
-function create(_svgContainer, _stackSize, _animDuration, _itemColors) {
+function createScene(_svgContainer, _stackSize, _animDuration, _itemColors) {
   svgContainer = _svgContainer;
   animDuration = _animDuration;
   stackSize = _stackSize;
@@ -130,4 +130,4 @@ function getStackLeft() {
   return bodyDim.x;
 }
 
-module.exports = create;
+module.exports = createScene;
