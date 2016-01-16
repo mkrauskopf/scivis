@@ -31,6 +31,8 @@ function createScene(_svgContainer, _stackSize, _animDuration, _itemColors) {
   computeDimensions(stackSize);
   drawArrayContainer();
 
+  stackCommons.drawTitle(_svgContainer, "Stack implementation based on array", 5, containerDim.height - 5);
+
   return { 'stackSizeChanged': render }
 }
 

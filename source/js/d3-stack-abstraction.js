@@ -6,6 +6,7 @@ var _ = require('lodash');
 var stackCommons = require('./d3-stack-commons');
 
 var svgContainer;
+var containerDim;
 var animDuration;
 var stackSize;
 var itemColors;
@@ -29,12 +30,14 @@ function createScene(_svgContainer, _stackSize, _animDuration, _itemColors) {
   computeDimensions(stackSize);
   drawStackBody();
 
+  stackCommons.drawTitle(_svgContainer, "Stack Abstraction", 5, containerDim.height - 5);
+
   return { "stackSizeChanged": render }
 }
 
 /** Computes stack body and item dimensions based on parent container dimension. */
 function computeDimensions(stackSize) {
-  var containerDim = d3_.computeDimension(svgContainer);
+  containerDim = d3_.computeDimension(svgContainer);
 
   var width = 0.25, height = 0.65;
   bodyDim = { // center to parent container

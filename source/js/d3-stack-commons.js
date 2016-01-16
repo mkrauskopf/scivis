@@ -19,4 +19,17 @@ exports.appendItem = function(d3Selection, itemRect, colorFun, textFun, stackSiz
       .text(textFun);
 };
 
+exports.drawTitle = function(d3Selection, text, x, y) {
+  d3Selection.append('text')
+      .attr('x', x)
+      .attr('y', y)
+      .attr('text-anchor', 'start')
+      .attr('dominant-baseline', 'ideographic')
+      .attr('font-size', '11')
+      .attr('stroke-width', 0.3)
+      .attr('stroke', '#AAF')
+      .text(text);
+}
+
 module.exports = exports;
+
