@@ -52,6 +52,7 @@ module.exports = function() {
 
   ReactDOM.render(
     <div>
+      <h4>Visualization</h4>
       <p>
         Below is visualization of stack data structure from three different perspecitves:
       </p>
@@ -76,6 +77,21 @@ module.exports = function() {
         </div>
         <div id='stackContainer' className='col-md-10 vis-container'></div>
       </div>
+      <h4>Additional Information</h4>
+      <p>
+        <em>Aliases</em>: stack, pushdown stack, LIFO (last in, first out)
+      </p>
+      <h4>Resources</h4>
+      <ul>
+        <li>
+          <a href='http://algs4.cs.princeton.edu/home/'>Algorithms, 4th Edition</a>
+          <span className="small"> by</span> Robert Sedgewick and Kevin Wayne
+        </li>
+        <li>
+          <a href='http://www.sigcis.org/files/A%20brief%20history.pdf'>A brief history of the stack</a>
+          <span className="small"> by</span> Sten Henriksson
+        </li>
+      </ul>
     </div>,
     document.getElementById('container')
   );
