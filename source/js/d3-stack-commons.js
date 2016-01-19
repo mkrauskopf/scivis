@@ -29,7 +29,7 @@ exports.drawTitle = function(d3Selection, text, x, y) {
       .attr('stroke-width', 0.3)
       .attr('stroke', '#AAF')
       .text(text);
-}
+};
 
 module.exports = exports;
 
