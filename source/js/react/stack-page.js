@@ -53,8 +53,21 @@ module.exports = function() {
   ReactDOM.render(
     <div>
       <p>
-        Visualization of <em>stack</em> data structure abstraction (fixed-size for now).
-        Use <em>push</em> and <em>pop</em> buttons to manage stack items.<br/>
+        Below is visualization of stack data structure from three different perspecitves:
+      </p>
+      <ul>
+        <li><em>Abstraction</em>: data structure wihtout showing how data are represented.</li>
+        <li><em>Implementation based on array</em>: imlementation where stack items are kept in array data structure</li>
+        <li><em>Implementation based on linked-list</em>: imlementation where stack items are kept within linked list data structure</li>
+      </ul>
+      <p>
+        Currently stack is of fixed-size and allows two operations:
+      </p>
+      <ul>
+        <li><em>Push</em> adds random integer onto a stack</li>
+        <li><em>Pop</em> pops item from top of a stack</li>
+      </ul>
+      <p>
         Stack checks and indicates when it becomes full.
       </p>
       <div className='row'>
